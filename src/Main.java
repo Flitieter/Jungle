@@ -10,7 +10,6 @@ import java.io.IOException;
 public class Main {
 
     public static void main(String[] args) {
-        int xxxx;
         SwingUtilities.invokeLater(() -> {
             StartFrame startFrame=new StartFrame();
             startFrame.setVisible(true);
