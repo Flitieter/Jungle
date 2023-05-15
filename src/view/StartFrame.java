@@ -93,6 +93,7 @@ public class StartFrame extends UserData {
         bg.setLocation(x, y);
         add(bg);
     }
+
     public StartFrame(){
         setTitle("Jungle");
         setSize(WIDTH, HEIGHT);
@@ -100,6 +101,7 @@ public class StartFrame extends UserData {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE); //设置程序关闭按键，如果点击右上方的叉就游戏全部关闭了
         setLayout(null);
 
+        AddPicture("resource/TimberWolfIdleSide.gif",100,100,780,90);
         activeUser.setFont(new Font("", Font.BOLD, 12));
         activeUser.setBounds(800, 20, 300, 50);
         add(activeUser);
