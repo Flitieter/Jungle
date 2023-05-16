@@ -1,9 +1,7 @@
 package model;
 
-import java.io.File;
+import java.io.*;
 // import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.PrintWriter;
 // import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
@@ -22,6 +20,15 @@ public class Chessboard {
     private int Ry[] = { 0, 0, -1, 1 };
     private int[] Mk = new int[1002], Now = new int[5];
 
+    public Chessboard My_Clone() throws IOException, ClassNotFoundException {
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
+        objectOutputStream.writeObject(this);     //  序列化
+
+        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
+        ObjectInputStream objectInputStream = new ObjectInputStream(byteArrayInputStream);
+        return (Chessboard) objectInputStream.readObject();
+    }
     public Chessboard() {
         this.grid = new Cell[Constant.CHESSBOARD_ROW_SIZE.getNum()][Constant.CHESSBOARD_COL_SIZE.getNum()];// 19X19
         initGrid();

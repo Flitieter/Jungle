@@ -24,7 +24,7 @@ import javax.swing.JOptionPane;
  */
 public class GameController implements GameListener {
 
-    private static Chessboard model;
+    public static Chessboard model;
     private static ChessboardComponent view;
     private static PlayerColor currentPlayer=PlayerColor.BLUE;
 
@@ -170,6 +170,7 @@ public class GameController implements GameListener {
 //        for(ChessPiece e:Has){
 //            System.out.println(e.getX()+" "+e.getY()+" "+e.getName());
 //        }
+//        AIController.GetMap();
         ChessPiece choChess=Has.get(getRandomNumber(0,Has.size()-1));
         ChessboardPoint nowPoint=new ChessboardPoint(choChess.getX(), choChess.getY());
         ArrayList<Integer> Could=model.Get_Mark(nowPoint);
@@ -182,6 +183,7 @@ public class GameController implements GameListener {
         swapColor();
         CheckWin();
     }
+
     public void AImove(int ai){
         EasyAI(AIColor);
 //        x = num / 7;
