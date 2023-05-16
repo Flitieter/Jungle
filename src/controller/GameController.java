@@ -7,6 +7,7 @@ import view.ChessComponent;
 import view.ChessGameFrame;
 import view.ChessboardComponent;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -51,6 +52,9 @@ public class GameController implements GameListener {
 
         AI=ai;
     }
+    public static void Erase(){
+        model.Erase();
+    }
     public static void ChangeColor(){
         view.ChangeColor();
     }
@@ -93,7 +97,7 @@ public class GameController implements GameListener {
 
     // click an empty cell
     @Override
-    public void onPlayerClickCell(ChessboardPoint point, CellComponent component) {
+    public void onPlayerClickCell(ChessboardPoint point, CellComponent component) throws IOException, ClassNotFoundException {
         if (selectedPoint != null && model.isValidMove(selectedPoint, point)) {
             model.moveChessPiece(selectedPoint, point);
             view.setChessComponentAtGrid(0, point, view.removeChessComponentAtGrid(selectedPoint));
@@ -112,7 +116,7 @@ public class GameController implements GameListener {
 
     // click a cell with a chess
     @Override
-    public void onPlayerClickChessPiece(ChessboardPoint point, ChessComponent component) {
+    public void onPlayerClickChessPiece(ChessboardPoint point, ChessComponent component) throws IOException, ClassNotFoundException {
         if (selectedPoint == null) {
             if (model.getChessPieceOwner(point).equals(currentPlayer)) {
                 selectedPoint = point;
@@ -183,9 +187,29 @@ public class GameController implements GameListener {
         swapColor();
         CheckWin();
     }
-
-    public void AImove(int ai){
-        EasyAI(AIColor);
+    public void NormalAI(PlayerColor NowColor) throws IOException, ClassNotFoundException {
+        AIController aiController=new AIController(4);
+        aiController.Move(NowColor,1);
+//        System.out.println("NOW:");
+//        model.PrintMap();
+//        System.out.println("LAST");
+        ChessboardPoint nowPoint=aiController.ChoFromPoint;
+        ChessboardPoint toPoint=aiController.ChoToPoint;
+//        if(nowPoint==null||toPoint==null){
+//            System.out.println("NULL!!!!!!!");
+//        }
+//        System.out.println(nowPoint+" "+toPoint);
+        boolean flag=(model.getChessPieceAt(toPoint)==null);
+        model.Get_Mark(nowPoint);
+        model.moveChessPiece(nowPoint, toPoint);
+        view.setChessComponentAtGrid((flag)?(0):(1), toPoint, view.removeChessComponentAtGrid(nowPoint));
+        view.repaint();
+        swapColor();
+        CheckWin();
+    }
+    public void AImove(int ai) throws IOException, ClassNotFoundException {
+        if(ai==1)EasyAI(AIColor);
+        else NormalAI(AIColor);
 //        x = num / 7;
 //        y = num % 7;
     }

@@ -9,7 +9,7 @@ import java.util.ArrayList;
  * This class store the real chess information.
  * The Chessboard has 9*7 cells, and each cell has a position for chess
  */
-public class Chessboard {
+public class Chessboard implements Serializable{
     private Cell[][] grid;
     private ChessPiece[] chess = new ChessPiece[20];
     private int[][][] Link = new int[10][102][102];
@@ -82,7 +82,7 @@ public class Chessboard {
                 } else
                     continue;
             }
-            System.out.printf("???:%d %d\n", tx, ty);
+//            System.out.printf("???:%d %d\n", tx, ty);
 
             if (!isValidCapture(chess[num], grid[tx][ty].getPiece()))
                 continue;
@@ -91,7 +91,7 @@ public class Chessboard {
                 continue;
             if (tx * 7 + ty == 3 + 7 * 8 && (num & 1) == 1)
                 continue;
-            System.out.printf("???:%d %d %d\n", tx, ty, num);
+//            System.out.printf("???:%d %d %d\n", tx, ty, num);
             Mk[tx * 7 + ty] = 1;
             Now[++now] = tx * 7 + ty;
             res.add(tx * 7 + ty);
@@ -128,16 +128,30 @@ public class Chessboard {
         return getGridAt(point).getPiece();
     }
 
-    private Cell getGridAt(ChessboardPoint point) {
+    public Cell getGridAt(ChessboardPoint point) {
         return grid[point.getRow()][point.getCol()];
     }
-
+    public void PrintMap(){
+        for(int i=0;i<=8;i++){
+            for(int j=0;j<=6;j++){
+                ChessPiece nowPiece=getChessPieceAt(new ChessboardPoint(i,j));
+                if(nowPiece==null)continue;
+                System.out.println("("+i+","+j+")"+nowPiece.getName()+" "+nowPiece.getOwner());
+            }
+        }
+    }
     public void Erase() {
         grid[To_x[top]][To_y[top]].removePiece();
-        if (Id[top] != 0)
+        if (Id[top] != 0){
+            chess[Id[top]].setX(To_x[top]);
+            chess[Id[top]].setY(To_y[top]);
             grid[To_x[top]][To_y[top]].setPiece(chess[Id[top]]);
+        }
+        chess[Num[top]].setX(Fr_x[top]);
+        chess[Num[top]].setY(Fr_y[top]);
         grid[Fr_x[top]][Fr_y[top]].setPiece(chess[Num[top]]);
         top--;
+//        PrintMap();
     }
 
     private ChessPiece removeChessPiece(ChessboardPoint point) {
@@ -151,7 +165,7 @@ public class Chessboard {
     private void setChessPiece(ChessboardPoint point, ChessPiece chessPiece) {
         tmp = getGridAt(point).getPiece();
         if (tmp != null) {
-            Id[top] = tmp.getId();
+//            Id[top] = tmp.getId();
             tmp.setX(-1);
             tmp.setY(-1);
         }
@@ -161,7 +175,8 @@ public class Chessboard {
     }
 
     public void moveChessPiece(ChessboardPoint src, ChessboardPoint dest) {
-        System.out.println("form to"+src+" "+dest);
+//        PrintMap();
+//        System.out.println("form to"+src+" "+dest);
         if (!isValidMove(src, dest)) {
             throw new IllegalArgumentException("Illegal chess move!");
         }
@@ -173,6 +188,7 @@ public class Chessboard {
         Num[top] = getChessPieceAt(src).getId();
         if (getChessPieceAt(dest) != null)
             Id[top] = getChessPieceAt(dest).getId();
+        else Id[top]=0;
         setChessPiece(dest, removeChessPiece(src));
     }
 
@@ -185,10 +201,20 @@ public class Chessboard {
     }
 
     public boolean isValidMove(ChessboardPoint src, ChessboardPoint dest) {
-        if (getChessPieceAt(src) == null || (getChessPieceAt(dest) != null &&
-                !isValidCapture(src, dest))) {
+        if(getChessPieceAt(src) == null){
+            System.out.println("From is null!");
             return false;
         }
+        if(getChessPieceAt(dest) != null &&
+                !isValidCapture(src, dest)){
+            System.out.println(getChessPieceAt(src).getRank()+" "+getChessPieceAt(src).getOwner()+"   "+getChessPieceAt(dest).getRank()+" "+getChessPieceAt(dest).getOwner());
+            System.out.println("Eat is unvalid!");
+            return false;
+        }
+//        if (getChessPieceAt(src) == null || (getChessPieceAt(dest) != null &&
+//                !isValidCapture(src, dest))) {
+//            return false;
+//        }
         return Mk[dest.getID()] == 1;
     }
 

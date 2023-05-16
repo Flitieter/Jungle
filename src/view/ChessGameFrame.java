@@ -114,7 +114,10 @@ public class ChessGameFrame extends JFrame {
 
     private void addEraseButton() {
         JButton button = new JButton("Erase");
-        button.addActionListener((e) -> JOptionPane.showMessageDialog(this, "Erase"));
+        button.addActionListener((e) ->
+                GameController.Erase()
+//                JOptionPane.showMessageDialog(this, "Erase")
+        );
         button.setLocation(HEIGTH, HEIGTH / 10 + 180);
         button.setSize(200, 60);
         button.setFont(new Font("Rockwell", Font.BOLD, 20));

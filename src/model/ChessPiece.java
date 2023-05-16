@@ -2,7 +2,9 @@ package model;
 
 // import java.security.PublicKey;
 
-public class ChessPiece {
+import java.io.Serializable;
+
+public class ChessPiece implements Serializable {
 
     private PlayerColor owner;
 
@@ -53,12 +55,16 @@ public class ChessPiece {
         if (target.getOwner() == PlayerColor.BLUE && ((target.getX() == 8 && (target.getY() == 2 || target.getY() == 4)
                 || (target.getX() == 7 && target.getY() == 3))))
             return true;
-
+        System.out.println("?????");
         int r = target.GetRank();
-        if (rank == 1 && r == 8)
+        if (rank == 1 && r == 8){
+            System.out.println(!((3 <= x && x <= 5) && ((1 <= y && y <= 2) || (4 <= y && y <= 5))));
+            System.out.println(x+","+y);
             return !((3 <= x && x <= 5) && ((1 <= y && y <= 2) || (4 <= y && y <= 5)));
-        if (rank == 8 && r == 1)
+        }
+        if (rank == 8 && r == 1){
             return false;
+        }
         return rank >= r;
     }
 
