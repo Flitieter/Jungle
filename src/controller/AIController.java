@@ -21,15 +21,25 @@ public class AIController{
                 ChessPiece nowPiece=model.getChessPieceAt(new ChessboardPoint(i,j));
                 if(nowPiece==null)continue;
                 if(nowPiece.getOwner()==current){
-                    sum+= nowPiece.getRank();
+                    if((nowPiece.getY()==3&&nowPiece.getX()==0)||(nowPiece.getY()==3&&nowPiece.getX()==8)){
+                        return 100000;
+                    }
+                    else sum+= nowPiece.getRank();
                 }
-                else sum-=nowPiece.getRank();
+                else {
+                    if((nowPiece.getY()==3&&nowPiece.getX()==0)||(nowPiece.getY()==3&&nowPiece.getX()==8)){
+                        return -100000;
+                    }
+                    else sum-=nowPiece.getRank();
+                }
             }
         }
         return sum;
     }
     ChessboardPoint ChoFromPoint,ChoToPoint;
     public int Move(PlayerColor current,int step){
+        int tmp=Status(current);
+        if(tmp==-100000||tmp==100000)return tmp;
         if(step==LimStep+1){
             return Status(current);
         }
