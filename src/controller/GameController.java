@@ -193,6 +193,7 @@ public class GameController implements GameListener {
 //        System.out.println("NOW:");
 //        model.PrintMap();
 //        System.out.println("LAST");
+        if(aiController.Fr.isEmpty())return;
         int pos=getRandomNumber(0,aiController.Fr.size()-1);
         ChessboardPoint nowPoint=aiController.Fr.get(pos);
         ChessboardPoint toPoint=aiController.To.get(pos);

@@ -44,7 +44,7 @@ public class AIController{
         if(step==LimStep+1){
             return Status(current);
         }
-        int maxStatus=-10000;
+        int maxStatus=-1000000;
         for(int i=0;i<=8;i++){
             for(int j=0;j<=6;j++){
                 ChessPiece nowPiece=model.getChessPieceAt(new ChessboardPoint(i,j));
