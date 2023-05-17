@@ -10,6 +10,8 @@ public class AIController{
 
     private Chessboard model;
     private int LimStep;
+    public ArrayList<ChessboardPoint> Fr=new ArrayList<>();
+    public ArrayList<ChessboardPoint> To=new ArrayList<>();
     public AIController(int LimStep) throws IOException, ClassNotFoundException {
         model=GameController.model.My_Clone();
         this.LimStep=LimStep;
@@ -36,7 +38,6 @@ public class AIController{
         }
         return sum;
     }
-    ChessboardPoint ChoFromPoint,ChoToPoint;
     public int Move(PlayerColor current,int step){
         int tmp=Status(current);
         if(tmp==-100000||tmp==100000)return tmp;
@@ -61,8 +62,16 @@ public class AIController{
                         if(res>maxStatus){
                             maxStatus=res;
                             if(step==1){
-                                ChoFromPoint=nowPoint;
-                                ChoToPoint=toPoint;
+                                Fr.clear();
+                                To.clear();
+                                Fr.add(nowPoint);
+                                To.add(toPoint);
+                            }
+                        }
+                        else if(res==maxStatus){
+                            if(step==1){
+                                Fr.add(nowPoint);
+                                To.add(toPoint);
                             }
                         }
                         model.Erase();
