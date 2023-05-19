@@ -7,8 +7,9 @@ import model.Chessboard;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.Serializable;
 
-public class NewGameFrame extends UserData {
+public class NewGameFrame extends UserData implements Serializable {
     private  int WIDTH=410;
     private  int HEIGHT=610;
 

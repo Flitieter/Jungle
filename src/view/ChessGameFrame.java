@@ -9,6 +9,7 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 
@@ -16,7 +17,7 @@ import java.util.ArrayList;
  * 这个类表示游戏过程中的整个游戏界面，是一切的载体
  */
 
-public class ChessGameFrame extends JFrame {
+public class ChessGameFrame extends JFrame implements Serializable {
     // public final Dimension FRAME_SIZE ;
     private static int WIDTH;
     private static int HEIGTH;
@@ -30,7 +31,7 @@ public class ChessGameFrame extends JFrame {
     private ArrayList<JLabel>Picture=new ArrayList<JLabel>();
     private int nowPicture=0;
     public ChessGameFrame(int width, int height) {
-        setTitle("2023 CS109 Project Demo"); // 设置标题
+        setTitle("The Jungle"); // 设置标题
         WIDTH = width;
         HEIGTH = height;
         ONE_CHESS_SIZE = (HEIGTH * 4 / 5) / 9;

@@ -4,12 +4,13 @@ import model.PlayerColor;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.Serializable;
 
 /**
  * This is the equivalent of the ChessPiece class,
  * but this class only cares how to draw Chess on ChessboardComponent
  */
-public class ChessComponent extends JComponent {
+public class ChessComponent extends JComponent implements Serializable {
     private PlayerColor owner;
     private int kind;
     private boolean selected;

@@ -74,7 +74,7 @@ public class AIController{
                                 To.add(toPoint);
                             }
                         }
-                        model.Erase();
+                        model.Erase(0);
                     }
                 }
             }

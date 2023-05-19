@@ -1,5 +1,9 @@
 package model;
 
+import controller.GameController;
+import view.ChessComponent;
+import view.ChessboardComponent;
+
 import java.io.*;
 // import java.io.FileNotFoundException;
 // import java.io.UnsupportedEncodingException;
@@ -19,6 +23,10 @@ public class Chessboard implements Serializable{
     private int Rx[] = { -1, 1, 0, 0 };
     private int Ry[] = { 0, 0, -1, 1 };
     private int[] Mk = new int[1002], Now = new int[5];
+//    private ChessboardComponent view;
+//    public void RegisterChessboardComponent(ChessboardComponent view){
+//        this.view=view;
+//    }
 
     public Chessboard My_Clone() throws IOException, ClassNotFoundException {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
@@ -140,7 +148,7 @@ public class Chessboard implements Serializable{
             }
         }
     }
-    public void Erase() {
+    public void Erase(int type) {
         grid[To_x[top]][To_y[top]].removePiece();
         if (Id[top] != 0){
             chess[Id[top]].setX(To_x[top]);
@@ -150,10 +158,19 @@ public class Chessboard implements Serializable{
         chess[Num[top]].setX(Fr_x[top]);
         chess[Num[top]].setY(Fr_y[top]);
         grid[Fr_x[top]][Fr_y[top]].setPiece(chess[Num[top]]);
+        if(type==1){
+            ChessboardPoint To=new ChessboardPoint(To_x[top],To_y[top]);
+            ChessboardPoint Fr=new ChessboardPoint(Fr_x[top],Fr_y[top]);
+            GameController.view.removeChessComponentAtGrid(To);
+            if (Id[top] != 0){
+                GameController.view.setChessComponentAtGrid(0,To,new ChessComponent(chess[Id[top]].getOwner(),GameController.view.CHESS_SIZE,chess[Id[top]].getRank()));
+            }
+            GameController.view.setChessComponentAtGrid(0,Fr,new ChessComponent(chess[Num[top]].getOwner(),GameController.view.CHESS_SIZE,chess[Num[top]].getRank()));
+            GameController.view.repaint();
+        }
         top--;
 //        PrintMap();
     }
-
     private ChessPiece removeChessPiece(ChessboardPoint point) {
         ChessPiece chessPiece = getChessPieceAt(point);
         getGridAt(point).removePiece();

@@ -8,6 +8,7 @@ import view.ChessGameFrame;
 import view.ChessboardComponent;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -23,10 +24,10 @@ import javax.swing.JOptionPane;
  * onPlayerClickChessPiece()]
  *
  */
-public class GameController implements GameListener {
+public class GameController implements GameListener, Serializable {
 
     public static Chessboard model;
-    private static ChessboardComponent view;
+    public static ChessboardComponent view;
     private static PlayerColor currentPlayer=PlayerColor.BLUE;
 
     private static int Round;
@@ -44,16 +45,27 @@ public class GameController implements GameListener {
         this.view = view;
         this.model = model;
         this.currentPlayer = PlayerColor.BLUE;
-
+//        model.RegisterChessboardComponent(view);
         view.registerController(this);
         initialize();
         view.initiateChessComponent(model);
         view.repaint();
-
+        Round=0;
+        ChessGameFrame.statusLabel.setText("Turn: "+((GameController.getRound()/2+1)+" "+GameController.getCurrentPlayer()));
         AI=ai;
     }
     public static void Erase(){
-        model.Erase();
+
+        if(AI>0){
+            model.Erase(1);
+            swapColor(-1);
+            model.Erase(1);
+            swapColor(-1);
+        }
+        else{
+            model.Erase(1);
+            swapColor(-1);
+        }
     }
     public static void ChangeColor(){
         view.ChangeColor();
@@ -67,10 +79,10 @@ public class GameController implements GameListener {
     }
 
     // after a valid move swap the player
-    private static void swapColor() {
+    private static void swapColor(int x) {
         currentPlayer = currentPlayer == PlayerColor.BLUE ? PlayerColor.RED : PlayerColor.BLUE;
         TimerMonitor.time=TimerMonitor.TimeLimit;
-        Round++;
+        Round+=x;
         ChessGameFrame.statusLabel.setText("Turn: "+((GameController.getRound()/2+1)+" "+GameController.getCurrentPlayer()));
     }
 
@@ -88,8 +100,8 @@ public class GameController implements GameListener {
                 ;
             // model = new Chessboard();
             else if (opt == 1) {
-                model.Erase();
-                model.Erase();
+                Erase();
+                Erase();
             } else
                 ;// TODO:
         }
@@ -102,7 +114,7 @@ public class GameController implements GameListener {
             model.moveChessPiece(selectedPoint, point);
             view.setChessComponentAtGrid(0, point, view.removeChessComponentAtGrid(selectedPoint));
             selectedPoint = null;
-            swapColor();
+            swapColor(1);
             CheckWin();
             model.Erase_Mark();
             view.Erase_Mark(now);
@@ -136,7 +148,7 @@ public class GameController implements GameListener {
             model.moveChessPiece(selectedPoint, point);
             view.setChessComponentAtGrid(1, point, view.removeChessComponentAtGrid(selectedPoint));
             selectedPoint = null;
-            swapColor();
+            swapColor(1);
             CheckWin();
             model.Erase_Mark();
             view.Erase_Mark(now);
@@ -148,7 +160,7 @@ public class GameController implements GameListener {
         }
     }
 
-    private int AI;
+    private static int AI;
     static Random random=new Random();
     public static int getRandomNumber(int L, int R){
         if(L==R)return L;
@@ -184,7 +196,7 @@ public class GameController implements GameListener {
         model.moveChessPiece(nowPoint, toPoint);
         view.setChessComponentAtGrid((flag)?(0):(1), toPoint, view.removeChessComponentAtGrid(nowPoint));
         view.repaint();
-        swapColor();
+        swapColor(1);
         CheckWin();
     }
     public void NormalAI(PlayerColor NowColor) throws IOException, ClassNotFoundException {
@@ -206,7 +218,7 @@ public class GameController implements GameListener {
         model.moveChessPiece(nowPoint, toPoint);
         view.setChessComponentAtGrid((flag)?(0):(1), toPoint, view.removeChessComponentAtGrid(nowPoint));
         view.repaint();
-        swapColor();
+        swapColor(1);
         CheckWin();
     }
     public void AImove(int ai) throws IOException, ClassNotFoundException {

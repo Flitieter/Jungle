@@ -5,10 +5,11 @@ import Control.UserData;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserFrame extends UserData {
+public class UserFrame extends UserData implements Serializable {
     private static int WIDTH=600;
     private static int HEIGHT=400;
     JTextField tfID;

@@ -9,6 +9,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 // import java.lang.reflect.Array;
 // import java.util.ArrayList;
@@ -22,10 +23,10 @@ import java.util.Set;
 /**
  * This class represents the checkerboard component object on the panel
  */
-public class ChessboardComponent extends JComponent {
+public class ChessboardComponent extends JComponent implements Serializable {
     private final CellComponent[][] gridComponents = new CellComponent[Constant.CHESSBOARD_ROW_SIZE.getNum()][Constant.CHESSBOARD_COL_SIZE
             .getNum()];
-    private final int CHESS_SIZE;
+    public final int CHESS_SIZE;
     private final Set<ChessboardPoint> riverCell = new HashSet<>();
     private final Set<ChessboardPoint> Traps = new HashSet<>();
     private final Set<ChessboardPoint> Dens = new HashSet<>();

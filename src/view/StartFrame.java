@@ -7,9 +7,10 @@ import model.Chessboard;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.Serializable;
 import java.util.Collections;
 
-public class StartFrame extends UserData {
+public class StartFrame extends UserData implements Serializable {
     private static int WIDTH=1100;
     private static int HEIGHT=810;
 

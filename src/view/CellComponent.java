@@ -2,6 +2,7 @@ package view;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.Serializable;
 import java.security.PublicKey;
 
 /**
@@ -9,7 +10,7 @@ import java.security.PublicKey;
  * but this class only cares how to draw Cells on ChessboardComponent
  */
 
-public class CellComponent extends JPanel {
+public class CellComponent extends JPanel implements Serializable {
     private Color background;
 
     public CellComponent(Color background, Point location, int size) {

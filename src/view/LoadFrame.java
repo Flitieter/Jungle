@@ -4,8 +4,9 @@ import Control.UserData;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.Serializable;
 
-public class LoadFrame extends UserData {
+public class LoadFrame extends UserData implements Serializable {
     public StartFrame startFrame=new StartFrame();
     private static int WIDTH=400;
     private static int HEIGHT=600;

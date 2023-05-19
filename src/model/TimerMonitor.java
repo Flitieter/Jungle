@@ -3,7 +3,9 @@ package model;
 import controller.GameController;
 import view.ChessGameFrame;
 
-public class TimerMonitor extends Thread{
+import java.io.Serializable;
+
+public class TimerMonitor extends Thread implements Serializable {
     public static int TimeLimit=40;
     public static int time;
     @Override

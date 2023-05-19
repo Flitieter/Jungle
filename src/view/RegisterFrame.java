@@ -5,9 +5,10 @@ import Control.UserData;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.Serializable;
 import java.util.Objects;
 
-public class RegisterFrame extends UserData {
+public class RegisterFrame extends UserData implements Serializable {
     public UserFrame userFrame=new UserFrame();
     private static int WIDTH=600;
     private static int HEIGHT=400;
