@@ -103,8 +103,8 @@ public class StartFrame extends UserData implements Serializable {
         setLayout(null);
 
         AddPicture("resource/TimberWolfIdleSide.gif",100,100,780,90);
-        activeUser.setFont(new Font("", Font.BOLD, 12));
-        activeUser.setBounds(800, 20, 300, 50);
+        activeUser.setFont(new Font("", Font.BOLD, 15));
+        activeUser.setBounds(800, 20, 300, 130);
         add(activeUser);
 
         addNewGameButton();

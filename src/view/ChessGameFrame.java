@@ -53,6 +53,7 @@ public class ChessGameFrame extends JFrame implements Serializable {
         addBackButton();
         addChangeBackgroundButton();
         addChangeChessboardButton();
+        addPlayBackButton();
         AddPicture("resource/ChessBoard1.jpg",WIDTH,HEIGTH,0,0);
         AddPicture("resource/ChessBoard1.png",WIDTH,HEIGTH,0,0);
         Picture.get(nowPicture).setVisible(true);
@@ -160,7 +161,17 @@ public class ChessGameFrame extends JFrame implements Serializable {
         button.setFont(new Font("Rockwell", Font.BOLD, 15));
         add(button);
     }
-
+    private void addPlayBackButton() {
+        JButton button = new JButton("Play Back");
+        button.addActionListener((e) ->{
+            GameController.PlayBack();
+//            ChessboardComponent.ChangeColor();
+        });
+        button.setLocation(HEIGTH, HEIGTH / 10 +360);
+        button.setSize(200, 60);
+        button.setFont(new Font("Rockwell", Font.BOLD, 15));
+        add(button);
+    }
     // private void addLoadButton() {
     // JButton button = new JButton("Load");
     // button.setLocation(HEIGTH, HEIGTH / 10 + 240);

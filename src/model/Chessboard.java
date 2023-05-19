@@ -17,9 +17,9 @@ public class Chessboard implements Serializable{
     private Cell[][] grid;
     private ChessPiece[] chess = new ChessPiece[20];
     private int[][][] Link = new int[10][102][102];
-    private int top, now;
-    private int[] Fr_x = new int[10004], Fr_y = new int[10004], To_x = new int[10004], To_y = new int[10004];
-    private int[] Id = new int[10004], Num = new int[10004];
+    public int top, now;
+    public int[] Fr_x = new int[10004], Fr_y = new int[10004], To_x = new int[10004], To_y = new int[10004];
+    public int[] Id = new int[10004], Num = new int[10004];
     private int Rx[] = { -1, 1, 0, 0 };
     private int Ry[] = { 0, 0, -1, 1 };
     private int[] Mk = new int[1002], Now = new int[5];
@@ -27,7 +27,10 @@ public class Chessboard implements Serializable{
 //    public void RegisterChessboardComponent(ChessboardComponent view){
 //        this.view=view;
 //    }
-
+    public void initLog(){
+        for(int i=1;i<=top+2;i++)Fr_x[i]=Fr_y[i]=To_x[i]=To_y[i]=Id[i]=Num[i]=0;
+        top=0;
+    }
     public Chessboard My_Clone() throws IOException, ClassNotFoundException {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
@@ -43,7 +46,7 @@ public class Chessboard implements Serializable{
         initPieces();
     }
 
-    private void initGrid() {
+    public void initGrid() {
         for (int i = 0; i < Constant.CHESSBOARD_ROW_SIZE.getNum(); i++) {
             for (int j = 0; j < Constant.CHESSBOARD_COL_SIZE.getNum(); j++) {
                 grid[i][j] = new Cell();
@@ -112,7 +115,7 @@ public class Chessboard implements Serializable{
             Mk[Now[i]] = 0;
     }
 
-    private void initPieces() {
+    public void initPieces() {
         grid[2][6].setPiece(chess[16] = new ChessPiece(PlayerColor.BLUE, "Elephant", 8, 2, 6, 16));
         grid[0][0].setPiece(chess[14] = new ChessPiece(PlayerColor.BLUE, "Lion", 7, 0, 0, 14));
         grid[0][6].setPiece(chess[12] = new ChessPiece(PlayerColor.BLUE, "Tiger", 6, 0, 6, 12));
@@ -191,21 +194,23 @@ public class Chessboard implements Serializable{
         chessPiece.setY(point.getCol());
     }
 
-    public void moveChessPiece(ChessboardPoint src, ChessboardPoint dest) {
+    public void moveChessPiece(ChessboardPoint src, ChessboardPoint dest,boolean log) {
 //        PrintMap();
 //        System.out.println("form to"+src+" "+dest);
         if (!isValidMove(src, dest)) {
             throw new IllegalArgumentException("Illegal chess move!");
         }
-        ++top;
-        Fr_x[top] = src.getRow();
-        Fr_y[top] = src.getCol();
-        To_x[top] = dest.getRow();
-        To_y[top] = dest.getCol();
-        Num[top] = getChessPieceAt(src).getId();
-        if (getChessPieceAt(dest) != null)
-            Id[top] = getChessPieceAt(dest).getId();
-        else Id[top]=0;
+        if(log){
+            ++top;
+            Fr_x[top] = src.getRow();
+            Fr_y[top] = src.getCol();
+            To_x[top] = dest.getRow();
+            To_y[top] = dest.getCol();
+            Num[top] = getChessPieceAt(src).getId();
+            if (getChessPieceAt(dest) != null)
+                Id[top] = getChessPieceAt(dest).getId();
+            else Id[top]=0;
+        }
         setChessPiece(dest, removeChessPiece(src));
     }
 

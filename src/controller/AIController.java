@@ -54,7 +54,7 @@ public class AIController{
                     ChessboardPoint nowPoint=new ChessboardPoint(i, j);
                     for(Integer to:Could){
                         ChessboardPoint toPoint=new ChessboardPoint(to/7,to%7);
-                        model.moveChessPiece(nowPoint, toPoint);
+                        model.moveChessPiece(nowPoint, toPoint,true);
                         PlayerColor newColor;
                         if(current==PlayerColor.BLUE)newColor=PlayerColor.RED;
                         else newColor=PlayerColor.BLUE;

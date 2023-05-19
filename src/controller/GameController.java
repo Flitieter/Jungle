@@ -34,7 +34,7 @@ public class GameController implements GameListener, Serializable {
     private ArrayList<Integer> now;
     // Record whether there is a selected piece before
     private ChessboardPoint selectedPoint;
-
+    public static boolean PlayBacking;
     public static int getRound(){
         return Round;
     }
@@ -47,15 +47,66 @@ public class GameController implements GameListener, Serializable {
         this.currentPlayer = PlayerColor.BLUE;
 //        model.RegisterChessboardComponent(view);
         view.registerController(this);
-        initialize();
+//        initialize();
         view.initiateChessComponent(model);
         view.repaint();
         Round=0;
         ChessGameFrame.statusLabel.setText("Turn: "+((GameController.getRound()/2+1)+" "+GameController.getCurrentPlayer()));
         AI=ai;
     }
-    public static void Erase(){
+    public static void StartAgain(){
+        model.initGrid();
+        model.initPieces();
+        model.initLog();
+        view.initiateChessComponent(model);
+        view.repaint();
+        Round=0;
+        currentPlayer=PlayerColor.BLUE;
+        ChessGameFrame.statusLabel.setText("Turn: "+((GameController.getRound()/2+1)+" "+GameController.getCurrentPlayer()));
+    }
+    public static void PlayBack(){
+        PlayBacking=true;
+        model.initGrid();
+        model.initPieces();
+        view.initiateChessComponent(model);
+        view.repaint();
+        Round=0;
+        currentPlayer=PlayerColor.BLUE;
+        ChessGameFrame.statusLabel.setText("Turn: "+((GameController.getRound()/2+1)+" "+GameController.getCurrentPlayer()));
+        Thread thread=new Thread(new Runnable() {
+            @Override
+            public void run() {
+                synchronized (this) {
+                    for (int i = 1; i <= model.top; i++) {
+                        try {
+                            Thread.sleep(600);
+                        } catch (InterruptedException e) {
+                            throw new RuntimeException(e);
+                        }
+                        int frx = model.Fr_x[i], fry = model.Fr_y[i];
+                        int tox = model.To_x[i], toy = model.To_y[i];
+                        ChessboardPoint fr = new ChessboardPoint(frx, fry);
+                        ChessboardPoint to = new ChessboardPoint(tox, toy);
+                        model.Get_Mark(fr);
+                        model.moveChessPiece(fr, to, false);
+                        if (model.Id[i] != 0) view.setChessComponentAtGrid(1, to, view.removeChessComponentAtGrid(fr));
+                        else view.setChessComponentAtGrid(0, to, view.removeChessComponentAtGrid(fr));
+                        swapColor(1);
+                        model.Erase_Mark();
+                        view.repaint();
+                    }
+                    PlayBacking=false;
+                }
+            }
+        });
+        thread.start();
 
+    }
+    public static void Erase(){
+        if(model.top==0){
+            JOptionPane.showMessageDialog(null, "You can't erase!", "Error", 0);
+            return;
+        }
         if(AI>0){
             model.Erase(1);
             swapColor(-1);
@@ -96,8 +147,9 @@ public class GameController implements GameListener, Serializable {
             int opt = JOptionPane.showOptionDialog(null, (res == 1 ? "蓝方" : "红方") + "胜利！！", "终局",
                     JOptionPane.YES_NO_OPTION,
                     JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
-            if (opt == 0)
-                ;
+            if (opt == 0){
+                StartAgain();
+            }
             // model = new Chessboard();
             else if (opt == 1) {
                 Erase();
@@ -110,8 +162,9 @@ public class GameController implements GameListener, Serializable {
     // click an empty cell
     @Override
     public void onPlayerClickCell(ChessboardPoint point, CellComponent component) throws IOException, ClassNotFoundException {
+        if(PlayBacking)return;
         if (selectedPoint != null && model.isValidMove(selectedPoint, point)) {
-            model.moveChessPiece(selectedPoint, point);
+            model.moveChessPiece(selectedPoint, point,true);
             view.setChessComponentAtGrid(0, point, view.removeChessComponentAtGrid(selectedPoint));
             selectedPoint = null;
             swapColor(1);
@@ -129,6 +182,7 @@ public class GameController implements GameListener, Serializable {
     // click a cell with a chess
     @Override
     public void onPlayerClickChessPiece(ChessboardPoint point, ChessComponent component) throws IOException, ClassNotFoundException {
+        if(PlayBacking)return;
         if (selectedPoint == null) {
             if (model.getChessPieceOwner(point).equals(currentPlayer)) {
                 selectedPoint = point;
@@ -145,7 +199,7 @@ public class GameController implements GameListener, Serializable {
             view.Erase_Mark(now);
             component.repaint();
         } else if (selectedPoint != null && model.isValidMove(selectedPoint, point)) {
-            model.moveChessPiece(selectedPoint, point);
+            model.moveChessPiece(selectedPoint, point,true);
             view.setChessComponentAtGrid(1, point, view.removeChessComponentAtGrid(selectedPoint));
             selectedPoint = null;
             swapColor(1);
@@ -193,9 +247,10 @@ public class GameController implements GameListener, Serializable {
         int to=Could.get(getRandomNumber(0,Could.size()-1));
         ChessboardPoint toPoint=new ChessboardPoint(to/7,to%7);
         boolean flag=(model.getChessPieceAt(toPoint)==null);
-        model.moveChessPiece(nowPoint, toPoint);
+        model.moveChessPiece(nowPoint, toPoint,true);
         view.setChessComponentAtGrid((flag)?(0):(1), toPoint, view.removeChessComponentAtGrid(nowPoint));
         view.repaint();
+        model.Erase_Mark();
         swapColor(1);
         CheckWin();
     }
@@ -215,9 +270,10 @@ public class GameController implements GameListener, Serializable {
 //        System.out.println(nowPoint+" "+toPoint);
         boolean flag=(model.getChessPieceAt(toPoint)==null);
         model.Get_Mark(nowPoint);
-        model.moveChessPiece(nowPoint, toPoint);
+        model.moveChessPiece(nowPoint, toPoint,true);
         view.setChessComponentAtGrid((flag)?(0):(1), toPoint, view.removeChessComponentAtGrid(nowPoint));
         view.repaint();
+        model.Erase_Mark();
         swapColor(1);
         CheckWin();
     }

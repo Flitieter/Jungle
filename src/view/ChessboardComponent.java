@@ -56,8 +56,9 @@ public class ChessboardComponent extends JComponent implements Serializable {
         for (int i = 0; i < Constant.CHESSBOARD_ROW_SIZE.getNum(); i++) {
             for (int j = 0; j < Constant.CHESSBOARD_COL_SIZE.getNum(); j++) {
                 // TODO:Implement the initialization checkerboard
-
+                gridComponents[i][j].removeAll();
                 if (grid[i][j].getPiece() != null) {
+                    System.out.println(i+" "+j);
                     ChessPiece chessPiece = grid[i][j].getPiece();
                     System.out.println(chessPiece.getOwner());
                     gridComponents[i][j].add(

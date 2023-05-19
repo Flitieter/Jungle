@@ -59,7 +59,7 @@ public class RegisterFrame extends UserData implements Serializable {
                 return;
             }
         }
-        JOptionPane.showMessageDialog(null, "Register successfully", "Error", 1);
+        JOptionPane.showMessageDialog(null, "Register successfully", "Message", 1);
         userList.add(new User(InID,InPassword));
         getUser();
         this.setVisible(false);
