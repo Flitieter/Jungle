@@ -39,7 +39,7 @@ public class UserFrame extends UserData implements Serializable {
                 if(e.getPassword().equals(InPassword)){
                     StartFrame.activeUser.setText("Welcome back, "+InID+"!");
                     this.setVisible(false);
-                    ActiveUser=new User(InID,InPassword);
+                    ActiveUser=e;
                 }
                 else{
                     JOptionPane.showMessageDialog(null, "Your password is wrong!", "Error", 0);

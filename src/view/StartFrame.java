@@ -49,8 +49,7 @@ public class StartFrame extends UserData implements Serializable {
         button.setFont(new Font("Rockwell", Font.BOLD, 20));
         add(button);
         button.addActionListener((e) -> {
-            this.setVisible(false);
-            //隐藏
+            System.exit(0);
         });
     }
     private void addRankButton(){
@@ -64,7 +63,7 @@ public class StartFrame extends UserData implements Serializable {
             else{
                 for(int i=0;i<userList.size();i++){
                     User user=userList.get(i);
-                    rank+=(i+1)+": "+user.getID()+"   "+user.getWinTimes()+"/"+user.getPlayTimes();
+                    rank+=(i+1)+": "+user.getID()+"   "+user.getWinTimes()+"/"+user.getPlayTimes()+"\n";
                 }
             }
             JOptionPane.showMessageDialog(null, rank, "Rank List",1);

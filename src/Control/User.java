@@ -24,4 +24,10 @@ public class User implements Comparable<User>{
     public int getPlayTimes(){
         return PlayTimes;
     }
+    public void addWinTimes(){
+        WinTimes++;
+    }
+    public void addPlayTimes(){
+        PlayTimes++;
+    }
 }

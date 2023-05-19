@@ -20,6 +20,7 @@ public class TimerMonitor extends Thread implements Serializable {
                         throw new RuntimeException(e);
                     }
                     time--;
+                    if(GameController.Win)time=TimeLimit;
                     ChessGameFrame.TimeScreen.setText("Time: "+time);
                 }
                 GameController.EasyAI(GameController.getCurrentPlayer());

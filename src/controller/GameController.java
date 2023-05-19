@@ -1,5 +1,6 @@
 package controller;
 
+import Control.UserData;
 import listener.GameListener;
 import model.*;
 import view.CellComponent;
@@ -24,10 +25,11 @@ import javax.swing.JOptionPane;
  * onPlayerClickChessPiece()]
  *
  */
-public class GameController implements GameListener, Serializable {
+public class GameController extends UserData implements GameListener, Serializable {
 
     public static Chessboard model;
     public static ChessboardComponent view;
+    public static boolean Win;
     private static PlayerColor currentPlayer=PlayerColor.BLUE;
 
     private static int Round;
@@ -45,6 +47,8 @@ public class GameController implements GameListener, Serializable {
         this.view = view;
         this.model = model;
         this.currentPlayer = PlayerColor.BLUE;
+        if(ai>0&&ActiveUser!=null)ActiveUser.addPlayTimes();
+        Win=false;
 //        model.RegisterChessboardComponent(view);
         view.registerController(this);
 //        initialize();
@@ -55,6 +59,7 @@ public class GameController implements GameListener, Serializable {
         AI=ai;
     }
     public static void StartAgain(){
+        Win=false;
         model.initGrid();
         model.initPieces();
         model.initLog();
@@ -63,6 +68,7 @@ public class GameController implements GameListener, Serializable {
         Round=0;
         currentPlayer=PlayerColor.BLUE;
         ChessGameFrame.statusLabel.setText("Turn: "+((GameController.getRound()/2+1)+" "+GameController.getCurrentPlayer()));
+        if(ActiveUser!=null)ActiveUser.addPlayTimes();
     }
     public static void PlayBack(){
         PlayBacking=true;
@@ -103,6 +109,7 @@ public class GameController implements GameListener, Serializable {
 
     }
     public static void Erase(){
+        if(Win)return;
         if(model.top==0){
             JOptionPane.showMessageDialog(null, "You can't erase!", "Error", 0);
             return;
@@ -137,13 +144,17 @@ public class GameController implements GameListener, Serializable {
         ChessGameFrame.statusLabel.setText("Turn: "+((GameController.getRound()/2+1)+" "+GameController.getCurrentPlayer()));
     }
 
-    private static void CheckWin() {
+    private static boolean CheckWin() {
         // 1:BLUE, 2:RED
         int res = model.win();
         if (res == 0)
-            return;
+            return false;
         else {
-            String[] options = { "新局", "撤销", "读档" };
+            Win=true;
+            if(AI>0&&res==1&&ActiveUser!=null){
+                ActiveUser.addWinTimes();
+            }
+            String[] options = { "新局", "读档","Back" };
             int opt = JOptionPane.showOptionDialog(null, (res == 1 ? "蓝方" : "红方") + "胜利！！", "终局",
                     JOptionPane.YES_NO_OPTION,
                     JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
@@ -151,28 +162,32 @@ public class GameController implements GameListener, Serializable {
                 StartAgain();
             }
             // model = new Chessboard();
-            else if (opt == 1) {
-                Erase();
-                Erase();
-            } else
+             else if(opt==1){
                 ;// TODO:
+            }
+            else {
+
+            }
+
+            return true;
         }
     }
 
     // click an empty cell
     @Override
     public void onPlayerClickCell(ChessboardPoint point, CellComponent component) throws IOException, ClassNotFoundException {
-        if(PlayBacking)return;
+        if(PlayBacking||Win)return;
         if (selectedPoint != null && model.isValidMove(selectedPoint, point)) {
             model.moveChessPiece(selectedPoint, point,true);
             view.setChessComponentAtGrid(0, point, view.removeChessComponentAtGrid(selectedPoint));
             selectedPoint = null;
             swapColor(1);
-            CheckWin();
             model.Erase_Mark();
             view.Erase_Mark(now);
             view.repaint();
-
+            if(CheckWin()==true){
+                return;
+            }
             if(AI>0){
                 AImove(AI);
             }
@@ -182,7 +197,7 @@ public class GameController implements GameListener, Serializable {
     // click a cell with a chess
     @Override
     public void onPlayerClickChessPiece(ChessboardPoint point, ChessComponent component) throws IOException, ClassNotFoundException {
-        if(PlayBacking)return;
+        if(PlayBacking||Win)return;
         if (selectedPoint == null) {
             if (model.getChessPieceOwner(point).equals(currentPlayer)) {
                 selectedPoint = point;
@@ -203,11 +218,12 @@ public class GameController implements GameListener, Serializable {
             view.setChessComponentAtGrid(1, point, view.removeChessComponentAtGrid(selectedPoint));
             selectedPoint = null;
             swapColor(1);
-            CheckWin();
             model.Erase_Mark();
             view.Erase_Mark(now);
             view.repaint();
-
+            if(CheckWin()==true){
+                return;
+            }
             if(AI>0){
                 AImove(AI);
             }
