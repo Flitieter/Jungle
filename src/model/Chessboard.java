@@ -10,6 +10,7 @@ import java.io.*;
 // import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 import java.util.Scanner;
 
 /**
@@ -289,6 +290,7 @@ public class Chessboard implements Serializable {
     }
 
     public boolean load(String way) throws IOException {
+        if(Objects.equals(way, ""))return false;
         File infile = new File(way);
         Scanner In = new Scanner(infile, "UTF-8");
         try{
@@ -335,6 +337,7 @@ public class Chessboard implements Serializable {
         }
     }
     public void Save(String way) throws IOException {
+        if(Objects.equals(way, ""))return;
         File outfile = new File(way);
         // PrintWriter Out = new PrintWriter(outfile, "UTF-8");
         PrintWriter Out = new PrintWriter(outfile, "UTF-8");
