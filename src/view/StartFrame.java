@@ -17,7 +17,7 @@ public class StartFrame extends UserData implements Serializable {
     static JLabel activeUser=new JLabel("Please login first!");
     private void addNewGameButton() {
         JButton button = new JButton("new game");
-        button.setLocation(100, 100);
+        button.setLocation(100, 130);
         button.setSize(200, 60);
         button.setFont(new Font("Rockwell", Font.BOLD, 20));
         add(button);
@@ -44,7 +44,7 @@ public class StartFrame extends UserData implements Serializable {
     }
     void addQuitButton(){
         JButton button = new JButton("quit");
-        button.setLocation(100, 500);
+        button.setLocation(100, 430);
         button.setSize(200, 60);
         button.setFont(new Font("Rockwell", Font.BOLD, 20));
         add(button);
@@ -68,14 +68,14 @@ public class StartFrame extends UserData implements Serializable {
             }
             JOptionPane.showMessageDialog(null, rank, "Rank List",1);
         });
-        button.setLocation(100, 300);
+        button.setLocation(100, 230);
         button.setSize(200, 60);
         button.setFont(new Font("Rockwell", Font.BOLD, 20));
         add(button);
     }
     private void addUserButton() {
         JButton button = new JButton("User");
-        button.setLocation(100, 400);
+        button.setLocation(100, 330);
         button.setSize(200, 60);
         button.setFont(new Font("Rockwell", Font.BOLD, 20));
         add(button);
@@ -107,7 +107,7 @@ public class StartFrame extends UserData implements Serializable {
         add(activeUser);
 
         addNewGameButton();
-        addLoadGameButton();
+//        addLoadGameButton();
         addQuitButton();
         addUserButton();
         addRankButton();

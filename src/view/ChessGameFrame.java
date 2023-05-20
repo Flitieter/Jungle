@@ -53,6 +53,7 @@ public class ChessGameFrame extends JFrame implements Serializable {
         addBackButton();
         addChangeBackgroundButton();
         addChangeChessboardButton();
+        addSaveButton();
         addPlayBackButton();
         AddPicture("resource/ChessBoard1.jpg",WIDTH,HEIGTH,0,0);
         AddPicture("resource/ChessBoard1.png",WIDTH,HEIGTH,0,0);
@@ -107,12 +108,19 @@ public class ChessGameFrame extends JFrame implements Serializable {
 
     private void addLoadButton() {
         JButton button = new JButton("Load");
-        button.addActionListener((e) -> JOptionPane.showMessageDialog(this, "Load"));
+        button.addActionListener((e) -> {
+            try {
+                GameController.Load();
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
         button.setLocation(HEIGTH, HEIGTH / 10 + 120);
         button.setSize(200, 60);
         button.setFont(new Font("Rockwell", Font.BOLD, 20));
         add(button);
     }
+
 
     private void addEraseButton() {
         JButton button = new JButton("Erase");
@@ -170,6 +178,21 @@ public class ChessGameFrame extends JFrame implements Serializable {
         button.setLocation(HEIGTH, HEIGTH / 10 +360);
         button.setSize(200, 60);
         button.setFont(new Font("Rockwell", Font.BOLD, 15));
+        add(button);
+    }
+    private void addSaveButton() {
+        JButton button = new JButton("Save");
+        button.addActionListener((e) -> {
+            String Way=GameController.getFileWay();
+            try {
+                GameController.model.Save(Way);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+        button.setLocation(HEIGTH, HEIGTH / 10 + 420);
+        button.setSize(200, 60);
+        button.setFont(new Font("Rockwell", Font.BOLD, 20));
         add(button);
     }
     // private void addLoadButton() {

@@ -73,6 +73,7 @@ public class GameController extends UserData implements GameListener, Serializab
         model.initLog();
         view.initiateChessComponent(model);
         view.repaint();
+        TimerMonitor.time=TimerMonitor.TimeLimit;
         Round = 0;
         currentPlayer = PlayerColor.BLUE;
         ChessGameFrame.statusLabel
@@ -121,6 +122,19 @@ public class GameController extends UserData implements GameListener, Serializab
         });
         thread.start();
 
+    }
+    public static void Load() throws IOException {
+        Chessboard newModel=new Chessboard();
+        String Way=getFileWay();
+        if(!newModel.load(Way))return;
+        StartAgain();
+        model=newModel;
+        Round=model.top;
+        currentPlayer=(Round%2==1)?(PlayerColor.BLUE):(PlayerColor.RED);
+        view.initiateChessComponent(newModel);
+        view.repaint();
+        ChessGameFrame.statusLabel
+                .setText("Turn: " + ((GameController.getRound() / 2 + 1) + " " + GameController.getCurrentPlayer()));
     }
 
     public static void Erase() {
@@ -298,7 +312,7 @@ public class GameController extends UserData implements GameListener, Serializab
         CheckWin();
     }
 
-    String getFileway() {
+    public static String getFileWay() {
         JFileChooser fileChooser = new JFileChooser();
         int result = fileChooser.showOpenDialog(null);
         if (result == JFileChooser.APPROVE_OPTION) {
@@ -307,7 +321,6 @@ public class GameController extends UserData implements GameListener, Serializab
         }
         return "";
     }
-
     public void NormalAI(PlayerColor NowColor) throws IOException, ClassNotFoundException {
         AIController aiController = new AIController(4);
         aiController.Move(NowColor, 1);

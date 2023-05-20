@@ -4,10 +4,12 @@ import controller.GameController;
 import view.ChessComponent;
 import view.ChessboardComponent;
 
+import javax.swing.*;
 import java.io.*;
 // import java.io.FileNotFoundException;
 // import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 /**
@@ -286,50 +288,59 @@ public class Chessboard implements Serializable {
         return 0;
     }
 
-    public void load(String way, ChessboardComponent v) throws IOException {
-        File infile = new File("Coldplay.txt");
+    public boolean load(String way) throws IOException {
+        File infile = new File(way);
         Scanner In = new Scanner(infile, "UTF-8");
-        int n = In.nextInt();
-        top = 0;
-        initGrid();
-        initPieces();
-        for (int i = 1, s, e; i <= n; ++i) {
-            e = Num[i] = In.nextInt();
-            Fr_x[i] = In.nextInt();
-            Fr_y[i] = In.nextInt();
-            To_x[i] = In.nextInt();
-            Fr_y[i] = In.nextInt();
-            s = Id[i] = In.nextInt();
-            if (Num[i] < 1 || Num[i] > 17 || Id[i] < 0 || Id[i] > 17) {
-                System.out.printf("The id of chess is invalid");
-                break;
-            } else if (chess[s].getX() != Fr_x[i] || chess[s].getY() != Fr_y[i]) {
-                System.out.printf("The place of chosed chess is invalid");
-                break;
-            } else if (chess[e].getX() != To_x[i] || chess[e].getY() != To_y[i]) {
-                System.out.printf("The place of captured chess is invalid");
-                break;
-            } else {
-                Get_Mark(Fr_x[i], Fr_y[i], s);
-                if (Mk[To_x[i] * 7 + To_y[i]] == 0 || (e != 0 && !chess[s].canCapture(chess[e]))) {
-                    System.out.printf((e == 0 ? "Move" : "Capture") + " is invalid");
-                    break;
+        try{
+            int n = In.nextInt();
+            for (int i = 1, s, e; i <= n; ++i) {
+//            System.out.println(i+"#####");
+                s = Num[i] = In.nextInt();
+                Fr_x[i] = In.nextInt();
+                Fr_y[i] = In.nextInt();
+                To_x[i] = In.nextInt();
+                To_y[i] = In.nextInt();
+                e = Id[i] = In.nextInt();
+//            System.out.println(Fr_x[i]+","+Fr_y[i]);
+                if (Num[i] < 1 || Num[i] > 17 || Id[i] < 0 || Id[i] > 17) {
+                    System.out.printf("The id of chess is invalid\n");
+                    JOptionPane.showMessageDialog(null, "The id of chess is invalid", "Error", 0);
+                    return false;
+                } else if (chess[s].getX() != Fr_x[i] || chess[s].getY() != Fr_y[i]) {
+                    System.out.printf("The place of chosen chess is invalid\n");
+                    JOptionPane.showMessageDialog(null, "The place of chosen chess is invalid", "Error", 0);
+                    return false;
+                } else if (e!=0&&(chess[e].getX() != To_x[i] || chess[e].getY() != To_y[i])) {
+                    System.out.printf("The place of captured chess is invalid\n");
+                    JOptionPane.showMessageDialog(null, "The place of captured chess is invalid", "Error", 0);
+                    return false;
+                } else {
+                    Get_Mark(Fr_x[i], Fr_y[i], s);
+                    if (Mk[To_x[i] * 7 + To_y[i]] == 0 || (e != 0 && !chess[s].canCapture(chess[e]))) {
+                        System.out.printf((e == 0 ? "Move" : "Capture") + " is invalid\n");
+                        JOptionPane.showMessageDialog(null, (e == 0 ? "Move" : "Capture") + " is invalid", "Error", 0);
+                        return false;
+                    }
                 }
+                moveChessPiece(new ChessboardPoint(Fr_x[i],Fr_y[i]),new ChessboardPoint(To_x[i],To_y[i]),true);
                 Erase_Mark();
+                // TOMO:playback
             }
-            // TOMO:playback
+//        System.out.println("Load succeed!");
+            In.close();
+            return true;
+        }catch (NoSuchElementException e){
+            JOptionPane.showMessageDialog(null, "The input data is invalid", "Error", 0);
+            return false;
         }
-        In.close();
-
     }
-
     public void Save(String way) throws IOException {
         File outfile = new File(way);
         // PrintWriter Out = new PrintWriter(outfile, "UTF-8");
         PrintWriter Out = new PrintWriter(outfile, "UTF-8");
         Out.printf("%d\n", top);
         for (int i = 1; i <= top; ++i)
-            Out.printf("%d %d %d %d %d %d\n", Num[i], Fr_x[i], Fr_y[i], To_x[i], Fr_y[i], Id[i]);
+            Out.printf("%d %d %d %d %d %d\n", Num[i], Fr_x[i], Fr_y[i], To_x[i], To_y[i], Id[i]);
         Out.close();
     }
 }
