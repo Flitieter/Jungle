@@ -7,6 +7,7 @@ import model.Chessboard;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.IOException;
 import java.io.Serializable;
 
 public class NewGameFrame extends UserData implements Serializable {
@@ -33,7 +34,11 @@ public class NewGameFrame extends UserData implements Serializable {
         add(button);
         button.addActionListener((e) -> {
             ChessGameFrame mainFrame = new ChessGameFrame(1100, 810);
-            GameController gameController = new GameController(mainFrame.getChessboardComponent(), new Chessboard(),0);
+            try {
+                GameController gameController = new GameController(mainFrame.getChessboardComponent(), new Chessboard(),0);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
             mainFrame.setVisible(true);
             this.setVisible(false);
         });
@@ -47,7 +52,11 @@ public class NewGameFrame extends UserData implements Serializable {
         add(button);
         button.addActionListener((e) -> {
             ChessGameFrame mainFrame = new ChessGameFrame(1100, 810);
-            GameController gameController = new GameController(mainFrame.getChessboardComponent(), new Chessboard(),1);
+            try {
+                GameController gameController = new GameController(mainFrame.getChessboardComponent(), new Chessboard(),1);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
             mainFrame.setVisible(true);
             this.setVisible(false);
         });
@@ -61,7 +70,11 @@ public class NewGameFrame extends UserData implements Serializable {
         add(button);
         button.addActionListener((e) -> {
             ChessGameFrame mainFrame = new ChessGameFrame(1100, 810);
-            GameController gameController = new GameController(mainFrame.getChessboardComponent(), new Chessboard(),2);
+            try {
+                GameController gameController = new GameController(mainFrame.getChessboardComponent(), new Chessboard(),2);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
             mainFrame.setVisible(true);
             this.setVisible(false);
         });
@@ -75,7 +88,11 @@ public class NewGameFrame extends UserData implements Serializable {
         add(button);
         button.addActionListener((e) -> {
             ChessGameFrame mainFrame = new ChessGameFrame(1100, 810);
-            GameController gameController = new GameController(mainFrame.getChessboardComponent(), new Chessboard(),3);
+            try {
+                GameController gameController = new GameController(mainFrame.getChessboardComponent(), new Chessboard(),3);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
             mainFrame.setVisible(true);
             this.setVisible(false);
         });

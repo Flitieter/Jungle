@@ -3,6 +3,7 @@ package model;
 import controller.GameController;
 import view.ChessGameFrame;
 
+import java.io.IOException;
 import java.io.Serializable;
 
 public class TimerMonitor extends Thread implements Serializable {
@@ -23,7 +24,11 @@ public class TimerMonitor extends Thread implements Serializable {
                     if(GameController.Win)time=TimeLimit;
                     ChessGameFrame.TimeScreen.setText("Time: "+time);
                 }
-                GameController.EasyAI(GameController.getCurrentPlayer());
+                try {
+                    GameController.EasyAI(GameController.getCurrentPlayer());
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
             }
         }
     }

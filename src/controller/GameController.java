@@ -48,7 +48,7 @@ public class GameController extends UserData implements GameListener, Serializab
         return currentPlayer;
     }
 
-    public GameController(ChessboardComponent view, Chessboard model, int ai) {
+    public GameController(ChessboardComponent view, Chessboard model, int ai) throws IOException {
         this.view = view;
         this.model = model;
         this.currentPlayer = PlayerColor.BLUE;
@@ -66,7 +66,7 @@ public class GameController extends UserData implements GameListener, Serializab
         AI = ai;
     }
 
-    public static void StartAgain() {
+    public static void StartAgain() throws IOException {
         Win = false;
         model.initGrid();
         model.initPieces();
@@ -176,7 +176,7 @@ public class GameController extends UserData implements GameListener, Serializab
                 .setText("Turn: " + ((GameController.getRound() / 2 + 1) + " " + GameController.getCurrentPlayer()));
     }
 
-    private static boolean CheckWin() {
+    private static boolean CheckWin() throws IOException {
         // 1:BLUE, 2:RED
         int res = model.win();
         if (res == 0)
@@ -279,7 +279,7 @@ public class GameController extends UserData implements GameListener, Serializab
 
     private static PlayerColor AIColor = PlayerColor.RED;
 
-    public static void EasyAI(PlayerColor NowColor) {
+    public static void EasyAI(PlayerColor NowColor) throws IOException {
         List<ChessPiece> Has = new ArrayList<ChessPiece>();
         for (int i = 0; i <= 8; i++) {
             for (int j = 0; j <= 6; j++) {

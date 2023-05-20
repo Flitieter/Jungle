@@ -5,6 +5,7 @@ import Control.UserData;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -42,7 +43,7 @@ public class RegisterFrame extends UserData implements Serializable {
         addRegisterButton();
         addBackButton();
     }
-    public void register(){
+    public void register() throws IOException {
         String InID=tfID.getText();
         String InPassword=new String(tfPassword.getPassword());
         if(InID.equals("")){
@@ -61,6 +62,7 @@ public class RegisterFrame extends UserData implements Serializable {
         }
         JOptionPane.showMessageDialog(null, "Register successfully", "Message", 1);
         userList.add(new User(InID,InPassword));
+        WriteToFile();
         getUser();
         this.setVisible(false);
         userFrame.setVisible(true);
@@ -72,7 +74,11 @@ public class RegisterFrame extends UserData implements Serializable {
         button.setFont(new Font("Rockwell", Font.BOLD, 12));
         add(button);
         button.addActionListener((e) -> {
-            register();
+            try {
+                register();
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
         });
     }
     private void addBackButton() {
