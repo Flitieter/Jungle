@@ -8,12 +8,13 @@ import java.io.*;
 // import java.io.FileNotFoundException;
 // import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 /**
  * This class store the real chess information.
  * The Chessboard has 9*7 cells, and each cell has a position for chess
  */
-public class Chessboard implements Serializable{
+public class Chessboard implements Serializable {
     private Cell[][] grid;
     private ChessPiece[] chess = new ChessPiece[20];
     private int[][][] Link = new int[10][102][102];
@@ -23,23 +24,27 @@ public class Chessboard implements Serializable{
     private int Rx[] = { -1, 1, 0, 0 };
     private int Ry[] = { 0, 0, -1, 1 };
     private int[] Mk = new int[1002], Now = new int[5];
-//    private ChessboardComponent view;
-//    public void RegisterChessboardComponent(ChessboardComponent view){
-//        this.view=view;
-//    }
-    public void initLog(){
-        for(int i=1;i<=top+2;i++)Fr_x[i]=Fr_y[i]=To_x[i]=To_y[i]=Id[i]=Num[i]=0;
-        top=0;
+
+    // private ChessboardComponent view;
+    // public void RegisterChessboardComponent(ChessboardComponent view){
+    // this.view=view;
+    // }
+    public void initLog() {
+        for (int i = 1; i <= top + 2; i++)
+            Fr_x[i] = Fr_y[i] = To_x[i] = To_y[i] = Id[i] = Num[i] = 0;
+        top = 0;
     }
+
     public Chessboard My_Clone() throws IOException, ClassNotFoundException {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
-        objectOutputStream.writeObject(this);     //  序列化
+        objectOutputStream.writeObject(this); // 序列化
 
         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
         ObjectInputStream objectInputStream = new ObjectInputStream(byteArrayInputStream);
         return (Chessboard) objectInputStream.readObject();
     }
+
     public Chessboard() {
         this.grid = new Cell[Constant.CHESSBOARD_ROW_SIZE.getNum()][Constant.CHESSBOARD_COL_SIZE.getNum()];// 19X19
         initGrid();
@@ -67,10 +72,14 @@ public class Chessboard implements Serializable{
     }
 
     public ArrayList<Integer> Get_Mark(ChessboardPoint point) {
-        ArrayList<Integer> res = new ArrayList<>();
         int x = point.getRow(), y = point.getCol();
-        int tx, ty;
         int num = getChessPieceAt(point).getId();
+        return Get_Mark(x, y, num);
+    }
+
+    public ArrayList<Integer> Get_Mark(int x, int y, int num) {
+        ArrayList<Integer> res = new ArrayList<>();
+        int tx, ty;
         boolean f;
         now = 0;
         for (int i = 0; i < 4; ++i) {
@@ -93,7 +102,7 @@ public class Chessboard implements Serializable{
                 } else
                     continue;
             }
-//            System.out.printf("???:%d %d\n", tx, ty);
+            // System.out.printf("???:%d %d\n", tx, ty);
 
             if (!isValidCapture(chess[num], grid[tx][ty].getPiece()))
                 continue;
@@ -102,7 +111,7 @@ public class Chessboard implements Serializable{
                 continue;
             if (tx * 7 + ty == 3 + 7 * 8 && (num & 1) == 1)
                 continue;
-//            System.out.printf("???:%d %d %d\n", tx, ty, num);
+            // System.out.printf("???:%d %d %d\n", tx, ty, num);
             Mk[tx * 7 + ty] = 1;
             Now[++now] = tx * 7 + ty;
             res.add(tx * 7 + ty);
@@ -142,18 +151,21 @@ public class Chessboard implements Serializable{
     public Cell getGridAt(ChessboardPoint point) {
         return grid[point.getRow()][point.getCol()];
     }
-    public void PrintMap(){
-        for(int i=0;i<=8;i++){
-            for(int j=0;j<=6;j++){
-                ChessPiece nowPiece=getChessPieceAt(new ChessboardPoint(i,j));
-                if(nowPiece==null)continue;
-                System.out.println("("+i+","+j+")"+nowPiece.getName()+" "+nowPiece.getOwner());
+
+    public void PrintMap() {
+        for (int i = 0; i <= 8; i++) {
+            for (int j = 0; j <= 6; j++) {
+                ChessPiece nowPiece = getChessPieceAt(new ChessboardPoint(i, j));
+                if (nowPiece == null)
+                    continue;
+                System.out.println("(" + i + "," + j + ")" + nowPiece.getName() + " " + nowPiece.getOwner());
             }
         }
     }
+
     public void Erase(int type) {
         grid[To_x[top]][To_y[top]].removePiece();
-        if (Id[top] != 0){
+        if (Id[top] != 0) {
             chess[Id[top]].setX(To_x[top]);
             chess[Id[top]].setY(To_y[top]);
             grid[To_x[top]][To_y[top]].setPiece(chess[Id[top]]);
@@ -161,19 +173,22 @@ public class Chessboard implements Serializable{
         chess[Num[top]].setX(Fr_x[top]);
         chess[Num[top]].setY(Fr_y[top]);
         grid[Fr_x[top]][Fr_y[top]].setPiece(chess[Num[top]]);
-        if(type==1){
-            ChessboardPoint To=new ChessboardPoint(To_x[top],To_y[top]);
-            ChessboardPoint Fr=new ChessboardPoint(Fr_x[top],Fr_y[top]);
+        if (type == 1) {
+            ChessboardPoint To = new ChessboardPoint(To_x[top], To_y[top]);
+            ChessboardPoint Fr = new ChessboardPoint(Fr_x[top], Fr_y[top]);
             GameController.view.removeChessComponentAtGrid(To);
-            if (Id[top] != 0){
-                GameController.view.setChessComponentAtGrid(0,To,new ChessComponent(chess[Id[top]].getOwner(),GameController.view.CHESS_SIZE,chess[Id[top]].getRank()));
+            if (Id[top] != 0) {
+                GameController.view.setChessComponentAtGrid(0, To, new ChessComponent(chess[Id[top]].getOwner(),
+                        GameController.view.CHESS_SIZE, chess[Id[top]].getRank()));
             }
-            GameController.view.setChessComponentAtGrid(0,Fr,new ChessComponent(chess[Num[top]].getOwner(),GameController.view.CHESS_SIZE,chess[Num[top]].getRank()));
+            GameController.view.setChessComponentAtGrid(0, Fr, new ChessComponent(chess[Num[top]].getOwner(),
+                    GameController.view.CHESS_SIZE, chess[Num[top]].getRank()));
             GameController.view.repaint();
         }
         top--;
-//        PrintMap();
+        // PrintMap();
     }
+
     private ChessPiece removeChessPiece(ChessboardPoint point) {
         ChessPiece chessPiece = getChessPieceAt(point);
         getGridAt(point).removePiece();
@@ -185,7 +200,7 @@ public class Chessboard implements Serializable{
     private void setChessPiece(ChessboardPoint point, ChessPiece chessPiece) {
         tmp = getGridAt(point).getPiece();
         if (tmp != null) {
-//            Id[top] = tmp.getId();
+            // Id[top] = tmp.getId();
             tmp.setX(-1);
             tmp.setY(-1);
         }
@@ -194,13 +209,13 @@ public class Chessboard implements Serializable{
         chessPiece.setY(point.getCol());
     }
 
-    public void moveChessPiece(ChessboardPoint src, ChessboardPoint dest,boolean log) {
-//        PrintMap();
-//        System.out.println("form to"+src+" "+dest);
+    public void moveChessPiece(ChessboardPoint src, ChessboardPoint dest, boolean log) {
+        // PrintMap();
+        // System.out.println("form to"+src+" "+dest);
         if (!isValidMove(src, dest)) {
             throw new IllegalArgumentException("Illegal chess move!");
         }
-        if(log){
+        if (log) {
             ++top;
             Fr_x[top] = src.getRow();
             Fr_y[top] = src.getCol();
@@ -209,7 +224,8 @@ public class Chessboard implements Serializable{
             Num[top] = getChessPieceAt(src).getId();
             if (getChessPieceAt(dest) != null)
                 Id[top] = getChessPieceAt(dest).getId();
-            else Id[top]=0;
+            else
+                Id[top] = 0;
         }
         setChessPiece(dest, removeChessPiece(src));
     }
@@ -223,20 +239,21 @@ public class Chessboard implements Serializable{
     }
 
     public boolean isValidMove(ChessboardPoint src, ChessboardPoint dest) {
-        if(getChessPieceAt(src) == null){
+        if (getChessPieceAt(src) == null) {
             System.out.println("From is null!");
             return false;
         }
-        if(getChessPieceAt(dest) != null &&
-                !isValidCapture(src, dest)){
-            System.out.println(getChessPieceAt(src).getRank()+" "+getChessPieceAt(src).getOwner()+"   "+getChessPieceAt(dest).getRank()+" "+getChessPieceAt(dest).getOwner());
+        if (getChessPieceAt(dest) != null &&
+                !isValidCapture(src, dest)) {
+            System.out.println(getChessPieceAt(src).getRank() + " " + getChessPieceAt(src).getOwner() + "   "
+                    + getChessPieceAt(dest).getRank() + " " + getChessPieceAt(dest).getOwner());
             System.out.println("Eat is unvalid!");
             return false;
         }
-//        if (getChessPieceAt(src) == null || (getChessPieceAt(dest) != null &&
-//                !isValidCapture(src, dest))) {
-//            return false;
-//        }
+        // if (getChessPieceAt(src) == null || (getChessPieceAt(dest) != null &&
+        // !isValidCapture(src, dest))) {
+        // return false;
+        // }
         return Mk[dest.getID()] == 1;
     }
 
@@ -269,13 +286,47 @@ public class Chessboard implements Serializable{
         return 0;
     }
 
-    public void Save() throws IOException {
-        File outfile = new File("1.txt");
+    public void load(String way, ChessboardComponent v) throws IOException {
+        File infile = new File("Coldplay.txt");
+        Scanner In = new Scanner(infile, "UTF-8");
+        int n = In.nextInt();
+        top = 0;
+        initGrid();
+        initPieces();
+        for (int i = 1, s, e; i <= n; ++i) {
+            e = Num[i] = In.nextInt();
+            Fr_x[i] = In.nextInt();
+            Fr_y[i] = In.nextInt();
+            To_x[i] = In.nextInt();
+            Fr_y[i] = In.nextInt();
+            s = Id[i] = In.nextInt();
+            if (Num[i] < 1 || Num[i] > 17 || Id[i] < 0 || Id[i] > 17) {
+                System.out.printf("The id of chess is invalid");
+                break;
+            } else if (chess[s].getX() != Fr_x[i] || chess[s].getY() != Fr_y[i]) {
+                System.out.printf("The place of chosed chess is invalid");
+                break;
+            } else if (chess[e].getX() != To_x[i] || chess[e].getY() != To_y[i]) {
+                System.out.printf("The place of captured chess is invalid");
+                break;
+            } else {
+                Get_Mark(Fr_x[i], Fr_y[i], s);
+                if (Mk[To_x[i] * 7 + To_y[i]] == 0 || (e != 0 && !chess[s].canCapture(chess[e]))) {
+                    System.out.printf((e == 0 ? "Move" : "Capture") + " is invalid");
+                    break;
+                }
+                Erase_Mark();
+            }
+            // TOMO:playback
+        }
+        In.close();
 
+    }
+
+    public void Save(String way) throws IOException {
+        File outfile = new File(way);
         // PrintWriter Out = new PrintWriter(outfile, "UTF-8");
         PrintWriter Out = new PrintWriter(outfile, "UTF-8");
-        for (int i = 2; i <= 17; ++i)
-            Out.printf("%d %d %d\n", i, chess[i].getX(), chess[i].getY());
         Out.printf("%d\n", top);
         for (int i = 1; i <= top; ++i)
             Out.printf("%d %d %d %d %d %d\n", Num[i], Fr_x[i], Fr_y[i], To_x[i], Fr_y[i], Id[i]);
