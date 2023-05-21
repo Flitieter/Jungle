@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="Jungle:jar">
+    <output-path>$USER_HOME$/Desktop</output-path>
+    <root id="archive" name="Jungle.jar">
+      <element id="module-output" name="Jungle" />
+      <element id="artifact" artifact-name="The Jungle" />
+    </root>
+  </artifact>
+</component>

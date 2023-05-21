@@ -130,7 +130,7 @@ public class GameController extends UserData implements GameListener, Serializab
         StartAgain();
         model=newModel;
         Round=model.top;
-        currentPlayer=(Round%2==1)?(PlayerColor.BLUE):(PlayerColor.RED);
+        currentPlayer=(Round%2==1)?(PlayerColor.RED):(PlayerColor.BLUE);
         view.initiateChessComponent(newModel);
         view.repaint();
         ChessGameFrame.statusLabel
@@ -265,7 +265,7 @@ public class GameController extends UserData implements GameListener, Serializab
         }
     }
 
-    private static int AI;
+    public static int AI;
     static Random random = new Random();
 
     public static int getRandomNumber(int L, int R) {

@@ -330,6 +330,10 @@ public class Chessboard implements Serializable {
             }
 //        System.out.println("Load succeed!");
             In.close();
+            if(GameController.AI>0&&n%2==1){
+                JOptionPane.showMessageDialog(null, "This save is invalid for AI-playing", "Error", 0);
+                return false;
+            }
             return true;
         }catch (NoSuchElementException e){
             JOptionPane.showMessageDialog(null, "The input data is invalid", "Error", 0);
