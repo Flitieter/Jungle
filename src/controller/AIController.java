@@ -40,7 +40,7 @@ public class AIController{
     }
     public int Move(PlayerColor current,int step){
         int tmp=Status(current);
-        if(tmp==-100000||tmp==100000)return tmp;
+        if(tmp==-100000||tmp==100000)return tmp*(LimStep+1-step);
         if(step==LimStep+1){
             return Status(current);
         }
