@@ -50,7 +50,7 @@ public class ChessPiece implements Serializable {
         if (owner == PlayerColor.RED && ((x == 0 && (y == 2 || y == 4))
                 || (x == 1 && y == 3)))
             return false;
-        if (owner == PlayerColor.BLUE && ((x == 8 && y == 2 || y == 4)
+        if (owner == PlayerColor.BLUE && ((x == 8 && (y == 2 || y == 4))
                 || (x == 7 && y == 3)))
             return false;
         if (target.getOwner() == owner)
