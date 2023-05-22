@@ -246,6 +246,11 @@ public class Chessboard implements Serializable {
             System.out.println("From is null!");
             return false;
         }
+        ChessPiece a=getChessPieceAt(src);
+//        if (a.getOwner() == PlayerColor.BLUE && dest.getRow() == 0 && dest.getCol() == 3)
+//            return false;
+//        if (a.getOwner() == PlayerColor.RED && dest.getRow() == 8 && dest.getCol() == 3)
+//            return false;
         if (getChessPieceAt(dest) != null &&
                 !isValidCapture(src, dest)) {
             System.out.println(getChessPieceAt(src).getRank() + " " + getChessPieceAt(src).getOwner() + "   "
