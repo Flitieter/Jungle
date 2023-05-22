@@ -47,6 +47,12 @@ public class ChessPiece implements Serializable {
     }
 
     public boolean canCapture(ChessPiece target) {
+        if (owner == PlayerColor.RED && ((x == 0 && (y == 2 || y == 4))
+                || (x == 1 && y == 3)))
+            return false;
+        if (owner == PlayerColor.BLUE && ((x == 8 && y == 2 || y == 4)
+                || (x == 7 && y == 3)))
+            return false;
         if (target.getOwner() == owner)
             return false;
         if (target.getOwner() == PlayerColor.RED && ((target.getX() == 0 && (target.getY() == 2 || target.getY() == 4))
